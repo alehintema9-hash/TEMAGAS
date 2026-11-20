@@ -9,39 +9,76 @@ service cloud.firestore {
 
     function validTrack() {
       return request.resource.data.keys().hasOnly([
-          'title', 'artist', 'release_name', 'cover_url', 'cover_data',
-          'youtube_url', 'spotify_url', 'other_url', 'other_label',
-          'lyrics', 'created_at', 'updated_at'
-        ])
-        && request.resource.data.keys().hasAll([
-          'title', 'artist', 'release_name', 'cover_url', 'cover_data',
-          'youtube_url', 'spotify_url', 'other_url', 'other_label',
-          'lyrics', 'created_at'
-        ])
-        && request.resource.data.title is string
-        && request.resource.data.title.size() > 0
-        && request.resource.data.title.size() <= 120
-        && request.resource.data.artist is string
-        && request.resource.data.artist.size() > 0
-        && request.resource.data.artist.size() <= 120
-        && request.resource.data.release_name is string
-        && request.resource.data.release_name.size() <= 120
-        && request.resource.data.cover_url is string
-        && request.resource.data.cover_url.size() <= 2048
-        && request.resource.data.cover_data is string
-        && request.resource.data.cover_data.size() <= 400000
-        && request.resource.data.youtube_url is string
-        && request.resource.data.youtube_url.size() <= 2048
-        && request.resource.data.spotify_url is string
-        && request.resource.data.spotify_url.size() <= 2048
-        && request.resource.data.other_url is string
-        && request.resource.data.other_url.size() <= 2048
-        && request.resource.data.other_label is string
-        && request.resource.data.other_label.size() <= 40
-        && request.resource.data.lyrics is string
-        && request.resource.data.lyrics.size() > 0
-        && request.resource.data.lyrics.size() <= 60000
-        && request.resource.data.created_at is timestamp;
+        'title', 'artist', 'release_name', 'cover_url', 'cover_data',
+        'youtube_url', 'spotify_url', 'other_url', 'other_label',
+        'audio_url', 'lyrics', 'created_at', 'updated_at'
+      ])
+      && request.resource.data.keys().hasAll([
+        'title', 'artist', 'release_name', 'cover_url', 'cover_data',
+        'youtube_url', 'spotify_url', 'other_url', 'other_label',
+        'audio_url', 'lyrics', 'created_at'
+      ])
+      && request.resource.data.title is string
+      && request.resource.data.title.size() > 0
+      && request.resource.data.title.size() <= 120
+      && request.resource.data.artist is string
+      && request.resource.data.artist.size() > 0
+      && request.resource.data.artist.size() <= 120
+      && request.resource.data.release_name is string
+      && request.resource.data.release_name.size() <= 120
+      && request.resource.data.cover_url is string
+      && request.resource.data.cover_url.size() <= 2048
+      && request.resource.data.cover_data is string
+      && request.resource.data.cover_data.size() <= 400000
+      && request.resource.data.youtube_url is string
+      && request.resource.data.youtube_url.size() <= 2048
+      && request.resource.data.spotify_url is string
+      && request.resource.data.spotify_url.size() <= 2048
+      && request.resource.data.other_url is string
+      && request.resource.data.other_url.size() <= 2048
+      && request.resource.data.other_label is string
+      && request.resource.data.other_label.size() <= 40
+      && request.resource.data.audio_url is string
+      && request.resource.data.audio_url.size() <= 2048
+      && request.resource.data.lyrics is string
+      && request.resource.data.lyrics.size() > 0
+      && request.resource.data.lyrics.size() <= 60000
+      && request.resource.data.created_at is timestamp
+      && (
+        !request.resource.data.keys().hasAny(['updated_at'])
+        || request.resource.data.updated_at is timestamp
+      );
+    }
+
+    function validTextAlbum() {
+      return request.resource.data.keys().hasOnly([
+        'title', 'artist', 'description', 'cover_url',
+        'cover_data', 'songs', 'created_at', 'updated_at'
+      ])
+      && request.resource.data.keys().hasAll([
+        'title', 'artist', 'description', 'cover_url',
+        'cover_data', 'songs', 'created_at'
+      ])
+      && request.resource.data.title is string
+      && request.resource.data.title.size() > 0
+      && request.resource.data.title.size() <= 120
+      && request.resource.data.artist is string
+      && request.resource.data.artist.size() > 0
+      && request.resource.data.artist.size() <= 120
+      && request.resource.data.description is string
+      && request.resource.data.description.size() <= 2000
+      && request.resource.data.cover_url is string
+      && request.resource.data.cover_url.size() <= 2048
+      && request.resource.data.cover_data is string
+      && request.resource.data.cover_data.size() <= 400000
+      && request.resource.data.songs is list
+      && request.resource.data.songs.size() > 0
+      && request.resource.data.songs.size() <= 40
+      && request.resource.data.created_at is timestamp
+      && (
+        !request.resource.data.keys().hasAny(['updated_at'])
+        || request.resource.data.updated_at is timestamp
+      );
     }
 
     match /tracks/{trackId} {
@@ -51,6 +88,17 @@ service cloud.firestore {
         && request.resource.data.created_at == request.time;
       allow update: if isOwner()
         && validTrack()
+        && request.resource.data.created_at == resource.data.created_at;
+      allow delete: if isOwner();
+    }
+
+    match /text_albums/{albumId} {
+      allow read: if true;
+      allow create: if isOwner()
+        && validTextAlbum()
+        && request.resource.data.created_at == request.time;
+      allow update: if isOwner()
+        && validTextAlbum()
         && request.resource.data.created_at == resource.data.created_at;
       allow delete: if isOwner();
     }
