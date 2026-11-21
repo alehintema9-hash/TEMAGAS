@@ -177,7 +177,6 @@
     auth.useDeviceLanguage();
   }
 
-  // Генератор уникальных красивых градиентов на основе текста (чтобы обложки не повторялись)
   function generateUniqueCover(title='', artist='') {
     const seed = (title + artist).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
     const hue1 = seed % 360;
@@ -185,7 +184,6 @@
     return `linear-gradient(135deg, hsl(${hue1}, 70%, 22%), hsl(${hue2}, 60%, 10%))`;
   }
 
-  // Theme Toggle Logic
   const themeToggle = $('themeToggle');
   themeToggle.addEventListener('click', () => {
     const currentTheme = document.body.getAttribute('data-theme');
@@ -366,7 +364,6 @@
     };
   }
 
-  // Sticky Player Controls Logic
   const globalAudio = $('globalAudio');
   const stickyPlayer = $('stickyPlayer');
   const spPlayBtn = $('spPlayBtn');
@@ -701,4 +698,4 @@
   }
 </script>
 </body>
-</html>
+</html
