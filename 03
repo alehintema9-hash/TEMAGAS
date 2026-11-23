@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Музыкальный Портал</title>
+    <style>
+        /* Определяем переменные, чтобы менять цвета во всем сайте одним кликом */
+        :root {
+            --main-bg: #0a0a0a;
+            --card-bg: #141414;
+            --accent: #facc15; /* Тот самый ярко-желтый */
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+        }
+
+        body {
+            background-color: var(--main-bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif; /* Рекомендую подключить этот шрифт через Google Fonts */
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        /* Секция Hero */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 80px 20px;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem); /* Шрифт подстраивается под размер экрана */
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 25px;
+            border-radius: 50px;
+            border: 2px solid #27272a;
+            background: #18181b;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+        }
+
+        .search-button {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: none;
+            background: var(--accent);
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .search-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Сетка с треками */
+        .tracks-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
+        }
+
+        .tracks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .track-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #27272a;
+        }
+
+        .track-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-color: #3f3f46;
+        }
+
+        .track-cover {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #27272a;
+            object-fit: cover;
+        }
+
+        .track-info {
+            padding: 20px;
+        }
+
+        .track-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .play-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            background: var(--accent);
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <h1>Твои треки <span>тут.</span></h1>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Поиск по библиотеке...">
+            <button class="search-button">Найти</button>
+        </div>
+    </section>
+
+    <main class="tracks-section">
+        <h2 class="section-title">Текстовые альбомы</h2>
+        
+        <div class="tracks-grid">
+            <!-- Карточка трека (продублируй этот блок для новых треков) -->
+            <div class="track-card">
+                <img src="https://via.placeholder.com/300" alt="Обложка" class="track-cover">
+                <div class="track-info">
+                    <span class="track-name">Название трека 1</span>
+                    <button class="play-btn">Слушать</button>
+                </div>
+            </div>
+
+            <div class="track-card">
+                <img src="https://via.placeholder.com/300" alt="Обложка" class="track-cover">
+                <div class="track-info">
+                    <span class="track-name">Название трека 2</span>
+                    <button class="play-btn">Слушать</button>
+                </div>
+            </div>
+
+            <div class="track-card">
+                <img src="https://via.placeholder.com/300" alt="Обложка" class="track-cover">
+                <div class="track-info">
+                    <span class="track-name">Название трека 3</span>
+                    <button class="play-btn">Слушать</button>
+                </div>
+            </div>
+
+            <div class="track-card">
+                <img src="https://via.placeholder.com/300" alt="Обложка" class="track-cover">
+                <div class="track-info">
+                    <span class="track-name">Название трека 4</span>
+                    <button class="play-btn">Слушать</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
