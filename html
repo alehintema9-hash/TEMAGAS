@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070707">
+  <meta name="description" content="TEMAGAS — тексты песен, исполнители и релизы. Все тексты тут.">
+  <title>TEMAGAS — Все тексты тут</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #070707;
+      --panel: #111111;
+      --panel2: #161616;
+      --line: #222222;
+      --text: #f3f3f0;
+      --muted: #888882;
+      --accent: #f5e600;
+      --accent-hover: #dfd200;
+      --radius: 16px;
+    }
+    [data-theme="light"]{
+      --bg: #f6f6f2;
+      --panel: #ffffff;
+      --panel2: #eaeae5;
+      --line: #d8d8d2;
+      --text: #121212;
+      --muted: #666660;
+      --accent: #b89d00;
+      --accent-hover: #9e8500;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Manrope,sans-serif;min-height:100vh;transition:background .3s,color .3s;letter-spacing:-0.2px}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    .wrap{width:min(1180px,calc(100% - 48px));margin:auto}
+
+    /* Шапка */
+    header{position:sticky;top:0;z-index:10;background:rgba(7,7,7,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--line);transition:background .3s,border-color .3s}
+    [data-theme="light"] header{background:rgba(246,246,242,.85)}
+    .top{height:84px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none;font-weight:800;font-size:24px}
+    .brand-mark{width:38px;height:38px;background:var(--accent);color:#070707;border-radius:10px;display:grid;place-items:center;font-size:16px;font-weight:900;transform:rotate(-4deg)}
+    .brand em{font-style:normal;color:var(--accent)}
+    
+    nav{display:flex;align-items:center;gap:4px}
+    nav button{background:transparent;border:0;color:var(--muted);padding:10px 14px;border-radius:10px;font-weight:600;font-size:14px;transition:.2s}
+    nav button:hover,nav button.active{background:var(--panel2);color:var(--text)}
+    
+    .header-actions{display:flex;align-items:center;gap:12px}
+    .theme-toggle{background:var(--panel);border:1px solid var(--line);color:var(--text);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:15px;transition:.2s}
+    .theme-toggle:hover{border-color:var(--muted)}
+    .owner-open{background:transparent;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:10px 18px;font-weight:700;font-size:13px;transition:.2s}
+    .owner-open:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* Hero блок */
+    .hero{padding:70px 0 40px;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--accent);font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:16px}
+    .dot{width:6px;height:6px;background:var(--accent);border-radius:50%}
+    h1{font-size:clamp(42px,6vw,72px);line-height:1.02;letter-spacing:-2px;margin:0 0 20px;font-weight:800}
+    h1 span{color:var(--accent)}
+    .hero p{color:var(--muted);font-size:16px;line-height:1.7;max-width:520px;margin:0 0 32px}
+    
+    .search{display:flex;gap:10px;max-width:580px}
+    .search input{min-width:0;flex:1;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 20px;color:var(--text);outline:none;font-size:15px;transition:border-color .2s}
+    .search input:focus,.field input:focus,.field textarea:focus{border-color:var(--accent)}
+    .search button,.primary{background:var(--accent);color:#070707;border:0;border-radius:14px;padding:0 24px;font-weight:800;font-size:14px;transition:background .2s}
+    .search button:hover,.primary:hover{background:var(--accent-hover)}
+
+    .hero-art{min-height:280px;position:relative;display:grid;place-items:center}
+    .art-ring{width:260px;height:260px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;transform:rotate(-10deg)}
+    .art-inner{width:200px;height:200px;border-radius:50%;background:var(--panel);border:1px solid var(--line);display:grid;place-items:center;color:var(--accent);font-size:56px;font-weight:900;letter-spacing:-4px}
+
+    /* Статистика */
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:20px 0 50px}
+    .stats.hidden{display:none}
+    .stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 24px}
+    .stat b{display:block;font-size:28px;letter-spacing:-1px;margin-bottom:4px}
+    .stat span{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+
+    /* Каталог и секции */
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin:40px 0 24px}
+    .section-head h2{font-size:24px;letter-spacing:-0.5px;margin:0;font-weight:800}
+    .section-head p{color:var(--muted);font-size:13px;margin:6px 0 0}
+    
+    .filters{display:flex;gap:8px;flex-wrap:wrap}
+    .filter{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:9px 16px;font-size:12px;font-weight:700;transition:.2s}
+    .filter:hover{color:var(--text);border-color:var(--muted)}
+    .filter.active{background:var(--text);border-color:var(--text);color:var(--bg)}
+
+    .track-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .track{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .2s,border-color .2s}
+    .track:hover{transform:translateY(-4px);border-color:var(--muted)}
+    
+    .cover{height:180px;background:var(--panel2);position:relative;display:grid;place-items:center;overflow:hidden;width:100%;border:0}
+    .cover img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+    .cover-art-gen{width:100%;height:100%;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.5)}
+    .cover-art-gen span{font-size:12px;opacity:.7;margin-top:6px;font-weight:600}
+    
+    .type{position:absolute;left:12px;top:12px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);color:#fff;border-radius:6px;padding:5px 9px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;z-index:2}
+    
+    .track-body{padding:18px}
+    .track h3{font-size:16px;margin:0 0 4px;letter-spacing:-0.2px;font-weight:700}
+    .artist{font-size:13px;color:var(--muted);font-weight:600}
+    
+    .track-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:18px}
+    .track-foot small{color:var(--muted);font-size:12px;font-weight:600}
+    .links{display:flex;gap:6px;flex-wrap:wrap}
+    .links a{font-size:11px;text-decoration:none;color:var(--text);font-weight:700;border:1px solid var(--line);background:var(--panel2);padding:6px 10px;border-radius:8px;transition:.2s}
+    .links a:hover{border-color:var(--accent);color:var(--accent)}
+
+    .empty{grid-column:1/-1;border:1px dashed var(--line);border-radius:var(--radius);padding:50px 20px;text-align:center;color:var(--muted)}
+    .empty b{display:block;color:var(--text);margin-bottom:6px;font-size:16px}
+
+    .notice{margin:16px 0;background:var(--panel);border:1px solid var(--line);color:var(--text);padding:14px 18px;border-radius:12px;font-size:13px}
+    .notice.error{border-color:#5a2828;color:#ffb6b6}
+    .notice.ok{border-color:#285a38;color:#b8edc7}
+
+    /* Админ панель */
+    .admin-panel{display:none;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin:32px 0 50px}
+    .admin-panel.show{display:block}
+    .admin-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+    .admin-tab{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700}
+    .admin-tab.active{background:var(--accent);border-color:var(--accent);color:#070707}
+    .admin-page{display:none}
+    .admin-page.active{display:block}
+    
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field.full{grid-column:1/-1}
+    .field label{font-size:12px;color:var(--muted);font-weight:700}
+    .field input,.field textarea{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 16px;color:var(--text);outline:none;font-size:14px}
+    .field textarea{min-height:160px;resize:vertical;line-height:1.6}
+    .form-actions{display:flex;gap:10px;margin-top:20px}
+    .secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line);font-weight:700;border-radius:12px;padding:0 20px}
+
+    /* Модалки и плеер */
+    .modal{display:none;position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);padding:20px;place-items:center}
+    .modal.show{display:grid}
+    .modal-card{width:min(480px,100%);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:30px;box-shadow:0 25px 60px rgba(0,0,0,0.5);max-height:90vh;overflow:auto}
+    .close{float:right;background:var(--panel2);border:0;color:var(--text);border-radius:8px;width:32px;height:32px;font-weight:bold}
+    
+    .lyrics{white-space:pre-wrap;background:var(--panel2);border:1px solid var(--line);padding:20px;border-radius:14px;font-size:15px;line-height:1.8;color:var(--text);margin-top:16px}
+
+    .sticky-player{position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid var(--line);padding:14px 24px;display:none;align-items:center;justify-content:space-between;gap:20px;z-index:100;backdrop-filter:blur(20px)}
+    .sticky-player.show{display:flex}
+    .sp-info{display:flex;align-items:center;gap:14px;min-width:0;flex:1}
+    .sp-cover{width:48px;height:48px;border-radius:10px;background:var(--panel2);object-fit:cover;flex-shrink:0;display:grid;place-items:center;color:var(--accent);font-weight:800}
+    .sp-title{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sp-artist{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sp-controls{display:flex;align-items:center;gap:16px;flex:2;max-width:500px}
+    .sp-btn{background:var(--text);color:var(--bg);border:0;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:900;flex-shrink:0}
+    .sp-progress-wrap{display:flex;align-items:center;gap:12px;width:100%}
+    .sp-time{font-size:11px;color:var(--muted);width:36px;text-align:center}
+    .sp-slider{flex:1;-webkit-appearance:none;background:var(--line);height:4px;border-radius:2px;outline:none}
+    .sp-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer}
+    .sp-close{background:transparent;border:0;color:var(--muted);font-size:18px;padding:6px}
+
+    .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 22px;border-radius:99px;font-weight:700;font-size:13px;opacity:0;pointer-events:none;transition:.3s;z-index:200}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    footer{border-top:1px solid var(--line);margin-top:80px;padding:32px 0;color:var(--muted);font-size:13px}
+    .footer-row{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    .footer strong{color:var(--text)}
+
+    @media(max-width:800px){
+      .top{height:auto;min-height:70px;flex-wrap:wrap;padding:14px 0}
+      nav{order:3;width:100%;overflow:auto;padding-bottom:6px}
+      nav button{white-space:nowrap}
+      .hero{grid-template-columns:1fr;padding-top:30px}
+      .hero-art{display:none}
+      .track-grid{grid-template-columns:repeat(2,1fr)}
+      .sticky-player{flex-direction:column;align-items:stretch;gap:12px}
+      .sp-controls{max-width:100%}
+    }
+    @media(max-width:520px){
+      .track-grid{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body data-theme="dark">
+<header>
+  <div class="wrap top">
+    <a class="brand" href="#home" aria-label="TEMAGAS"><span class="brand-mark">T.</span><span>TEMA<em>GAS</em></span></a>
+    <nav aria-label="Основная навигация">
+      <button class="active" data-filter="home">Главная</button>
+      <button data-filter="tracks">Песни</button>
+      <button data-filter="artists">Исполнители</button>
+      <button data-filter="releases">Релизы</button>
+      <button data-filter="textAlbums">Текстовые альбомы</button>
+      <button id="addTabButton" style="display:none">Добавить</button>
+    </nav>
+    <div class="header-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Сменить тему">💡</button>
+      <button class="owner-open" id="ownerOpen">Вход владельца</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="home">
+  <section class="hero">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> Музыка. Слова. Смысл.</div>
+      <h1>ВСЕ ТЕКСТЫ<br><span>ТУТ.</span></h1>
+      <p>TEMAGAS — пространство, где собраны тексты песен, релизы и музыка. Читай, находи любимые треки и открывай новое.</p>
+      <div class="search"><input id="searchInput" type="search" placeholder="Найти песню или исполнителя..." autocomplete="off"><button id="searchBtn">Найти</button></div>
+    </div>
+    <div class="hero-art"><div class="art-ring"><div class="art-inner">T.</div></div></div>
+  </section>
+
+  <!-- Динамическая статистика (скрывается, если данных нет) -->
+  <section class="stats hidden" id="statsSection" aria-label="Статистика">
+    <div class="stat"><b id="trackCount">0</b><span>Треков</span></div>
+    <div class="stat"><b id="artistCount">0</b><span>Исполнителей</span></div>
+    <div class="stat"><b id="releaseCount">0</b><span>Релизов</span></div>
+  </section>
+
+  <div id="connectionNotice" class="notice" style="display:none">Подключение к каталогу…</div>
+  
+  <section id="collection">
+    <div class="section-head">
+      <div><h2 id="collectionTitle">Популярные тексты</h2><p>Выбирай трек и читай тексты в оригинале</p></div>
+      <div class="filters" aria-label="Тип релиза">
+        <button class="filter active" data-kind="all">Все</button>
+        <button class="filter" data-kind="Single">Singles</button>
+        <button class="filter" data-kind="EP">EP</button>
+        <button class="filter" data-kind="Album">Albums</button>
+      </div>
+    </div>
+    <div class="track-grid" id="trackGrid"><div class="empty"><b>Загружаем каталог…</b></div></div>
+  </section>
+
+  <section id="textAlbumsSection" style="display:none">
+    <div class="section-head"><div><h2>Текстовые альбомы</h2><p>Сборники стихов и текстов без привязки к аудио</p></div></div>
+    <div class="track-grid" id="textAlbumGrid"><div class="empty"><b>Загружаем альбомы…</b></div></div>
+  </section>
+
+  <section class="admin-panel" id="adminPanel">
+    <div class="admin-head"><div><h2>Панель управления</h2><small style="color:var(--accent)">● Режим владельца активен</small></div><button class="secondary" id="logoutBtn" style="height:36px">Выйти</button></div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-admin-tab="song">＋ Новая песня</button>
+      <button class="admin-tab" data-admin-tab="textAlbum">＋ Текстовый альбом</button>
+      <button class="admin-tab" data-admin-tab="manage">Управление</button>
+    </div>
+    
+    <div class="admin-page active" id="adminSongPage">
+      <form id="trackForm">
+        <input type="hidden" id="editId">
+        <div class="form-grid">
+          <div class="field"><label for="title">Название трека *</label><input id="title" required maxlength="120" placeholder="Например, Ночной город"></div>
+          <div class="field"><label for="artist">Исполнитель *</label><input id="artist" required maxlength="120" value="Temagas"></div>
+          <div class="field"><label for="releaseName">Название релиза</label><input id="releaseName" maxlength="120" placeholder="Альбом или сингл"></div>
+          <div class="field"><label for="coverFile">Обложка (файл)</label><input id="coverFile" type="file" accept="image/*"></div>
+          <div class="field"><label for="coverUrl">Или ссылка на обложку</label><input id="coverUrl" type="url" placeholder="https://..."></div>
+          <div class="field full"><div style="background:var(--panel2);border:1px dashed var(--line);border-radius:12px;padding:16px"><label for="audioFile" style="cursor:pointer;display:block"><b>Аудиофайл трека (MP3, WAV)</b><p style="color:var(--muted);font-size:12px;margin:4px 0 0">Максимум 25 МБ. Появится нижний плеер.</p></label><input id="audioFile" type="file" accept="audio/*" style="margin-top:10px;width:100%"><div id="audioStatus" style="font-size:12px;color:var(--accent);margin-top:6px"></div></div></div>
+          <div class="field"><label for="youtubeUrl">YouTube</label><input id="youtubeUrl" type="url" placeholder="https://..."></div>
+          <div class="field"><label for="spotifyUrl">Spotify</label><input id="spotifyUrl" type="url" placeholder="https://..."></div>
+          <div class="field"><label for="otherUrl">Другая ссылка</label><input id="otherUrl" type="url" placeholder="https://..."></div>
+          <div class="field"><label for="otherLabel">Название ссылки</label><input id="otherLabel" maxlength="40" placeholder="Bandcamp / Apple Music"></div>
+          <div class="field full"><label for="lyrics">Текст песни *</label><textarea id="lyrics" required placeholder="Вставь текст песни…"></textarea></div>
+        </div>
+        <div class="form-actions"><button class="primary" type="submit" id="saveBtn" style="height:44px">Опубликовать трек</button><button class="secondary" type="button" id="cancelEdit" hidden style="height:44px">Отмена</button></div>
+        <div id="formNotice" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <div class="admin-page" id="adminTextAlbumPage">
+      <form id="textAlbumForm">
+        <input type="hidden" id="editAlbumId">
+        <div class="form-grid">
+          <div class="field"><label for="albumTitle">Название альбома *</label><input id="albumTitle" required maxlength="120" placeholder="Между строк"></div>
+          <div class="field"><label for="albumArtist">Исполнитель *</label><input id="albumArtist" required maxlength="120" value="Temagas"></div>
+          <div class="field full"><label for="albumDescription">Описание</label><textarea id="albumDescription" style="min-height:80px" placeholder="Пара слов об альбоме…"></textarea></div>
+          <div class="field"><label for="albumCoverFile">Обложка</label><input id="albumCoverFile" type="file" accept="image/*"></div>
+          <div class="field"><label for="albumCoverUrl">Или ссылка</label><input id="albumCoverUrl" type="url" placeholder="https://..."></div>
+          <div class="field full"><label for="albumSongs">Песни и тексты *</label><p style="color:var(--muted);font-size:12px;margin:0">Формат: Название строкой, затем текст. Между треками строка с ---</p><textarea id="albumSongs" required style="min-height:220px" placeholder="Песня 1&#10;Текст песни 1&#10;&#10;---&#10;&#10;Песня 2&#10;Текст песни 2"></textarea></div>
+        </div>
+        <div class="form-actions"><button class="primary" type="submit" id="saveAlbumBtn" style="height:44px">Опубликовать альбом</button><button class="secondary" type="button" id="cancelAlbumEdit" hidden style="height:44px">Отмена</button></div>
+        <div id="albumFormNotice" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <div class="admin-page" id="adminManagePage"><div class="empty" id="adminManageList">Загружаем список…</div></div>
+  </section>
+</main>
+
+<!-- Плеер -->
+<div class="sticky-player" id="stickyPlayer">
+  <div class="sp-info">
+    <div class="sp-cover" id="spCoverContainer">T.</div>
+    <div style="min-width:0">
+      <div class="sp-title" id="spTitle">Трек</div>
+      <div class="sp-artist" id="spArtist">Артист</div>
+    </div>
+  </div>
+  <div class="sp-controls">
+    <button class="sp-btn" id="spPlayBtn">▶</button>
+    <div class="sp-progress-wrap">
+      <span class="sp-time" id="spCurrentTime">0:00</span>
+      <input type="range" class="sp-slider" id="spSlider" value="0" min="0" max="100" step="0.1">
+      <span class="sp-time" id="spDuration">0:00</span>
+    </div>
+  </div>
+  <button class="sp-close" id="spClose">✕</button>
+  <audio id="globalAudio" preload="none"></audio>
+</div>
+
+<div class="toast" id="toast">Скопировано в буфер обмена</div>
+
+<footer>
+  <div class="wrap footer-row">
+    <div><strong>TEMAGAS</strong> — Все тексты тут.</div>
+    <div>© <span id="year"></span> Все права защищены</div>
+  </div>
+</footer>
+
+<div class="modal" id="loginModal">
+  <div class="modal-card">
+    <button class="close" id="closeLogin">✕</button>
+    <h2 style="margin:0 0 8px;font-size:22px">Вход владельца</h2>
+    <p style="color:var(--muted);font-size:13px;margin:0 0 20px">Доступ разрешен только подтвержденному аккаунту владельца.</p>
+    <div class="field" style="margin-bottom:16px"><label>Email</label><div style="padding:12px 16px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;color:var(--accent);font-weight:700">alehintema9@gmail.com</div></div>
+    <button class="primary" id="sendMagic" style="width:100%;height:44px">Войти через Google</button>
+    <div id="loginNotice" aria-live="polite" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<div class="modal song-modal" id="songModal">
+  <div class="modal-card">
+    <button class="close" id="closeSong">✕</button>
+    <div id="songContent"></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/13.4.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/13.4.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/13.4.0/firebase-storage-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB7OTpx9Szan_BNZPgGnnSSb-45qpcWDkk",
+    authDomain: "temagas-434cd.firebaseapp.com",
+    projectId: "temagas-434cd",
+    appId: "1:969648646070:web:4935d0fca9bd1710a74317",
+    storageBucket: "temagas-434cd.firebasestorage.app"
+  };
+  const OWNER_EMAIL = 'alehintema9@gmail.com';
+  const $ = (id) => document.getElementById(id);
+  const escapeHTML = (value='') => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const safeURL = (value='') => { try { const u = new URL(value); return ['http:','https:'].includes(u.protocol) ? u.href : ''; } catch { return ''; } };
+  const configured = !!(firebaseConfig.apiKey && !firebaseConfig.apiKey.includes('PASTE_'));
+  let app = null, auth = null, db = null, storage = null, tracks = [], textAlbums = [], isOwner = false, currentKind = 'all', currentQuery = '', currentNav = 'home', editingCoverData = '', editingAudioUrl = '', editingAlbumCoverData = '';
+  
+  if (configured && window.firebase) {
+    app = firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+    storage = firebase.storage();
+    auth.useDeviceLanguage();
+  }
+
+  function generateUniqueCover(title='', artist='') {
+    const seed = (title + artist).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hue1 = seed % 360;
+    const hue2 = (hue1 + 40 + (seed % 50)) % 360;
+    return `linear-gradient(135deg, hsl(${hue1}, 50%, 18%), hsl(${hue2}, 40%, 8%))`;
+  }
+
+  const themeToggle = $('themeToggle');
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('temagas_theme', newTheme);
+    themeToggle.textContent = newTheme === 'dark' ? '💡' : '🌙';
+  });
+  const savedTheme = localStorage.getItem('temagas_theme') || 'dark';
+  document.body.setAttribute('data-theme', savedTheme);
+  themeToggle.textContent = savedTheme === 'dark' ? '💡' : '🌙';
+
+  function showToast(msg = 'Скопировано в буфер обмена') {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function showNotice(id, msg, kind='') { const el=$(id); if(!el)return; el.className = 'notice' + (kind ? ' '+kind : ''); el.textContent = msg; el.style.display='block'; }
+  function hideNotice(id){const el=$(id);if(el)el.style.display='none';}
+  function releaseKey(t){return `${(t.artist||'').trim().toLowerCase()}::${(t.release_name||t.title||'').trim().toLowerCase()}`;}
+  function releaseType(count){if(count<=1)return 'Single';if(count<10)return 'EP';return 'Album';}
+  function groupedTracks(){const groups=new Map();for(const t of tracks){const k=releaseKey(t);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(t);}const types={};for(const [k,arr] of groups)types[k]=releaseType(arr.length);return types;}
+  
+  function updateStats(){
+    const statsSec = $('statsSection');
+    if(!tracks.length && !textAlbums.length){
+      statsSec.classList.add('hidden');
+      return;
+    }
+    statsSec.classList.remove('hidden');
+    const artists=new Set([...tracks.map(t=>(t.artist||'').trim().toLowerCase()), ...textAlbums.map(a=>(a.artist||'').trim().toLowerCase())].filter(Boolean));
+    const releases=new Set([...tracks.map(releaseKey), ...textAlbums.map(a=>'album::'+(a.title||'').toLowerCase())]);
+    $('trackCount').textContent = tracks.length + textAlbums.reduce((sum, a) => sum + (a.songs?.length || 0), 0);
+    $('artistCount').textContent = artists.size;
+    $('releaseCount').textContent = releases.size;
+  }
+
+  function externalLinks(t){const items=[];const y=safeURL(t.youtube_url);const s=safeURL(t.spotify_url);const o=safeURL(t.other_url);if(y)items.push(['YouTube',y]);if(s)items.push(['Spotify',s]);if(o)items.push([t.other_label||'Ссылка',o]);return items;}
+  function coverSource(t){return t.cover_data || safeURL(t.cover_url) || '';}
+
+  function render(){
+    updateStats();
+    const isTextAlbums=currentNav==='textAlbums';
+    $('collection').style.display=isTextAlbums?'none':'block';
+    $('textAlbumsSection').style.display=isTextAlbums?'block':'none';
+    if(isTextAlbums){renderTextAlbums();return;}
+    
+    const types=groupedTracks();
+    let list=tracks.filter(t=>{
+      const hay=[t.title,t.artist,t.release_name,t.lyrics].join(' ').toLowerCase();
+      const q=currentQuery.toLowerCase();
+      const kind=types[releaseKey(t)];
+      return (!q||hay.includes(q))&&(currentKind==='all'||kind===currentKind);
+    });
+
+    if(currentNav==='artists'){
+      const seen=new Set();
+      list=list.filter(t=>{const a=(t.artist||'').toLowerCase();if(seen.has(a))return false;seen.add(a);return true;});
+      $('collectionTitle').textContent='Исполнители';
+    }else if(currentNav==='releases'){
+      $('collectionTitle').textContent='Релизы';
+    }else{
+      $('collectionTitle').textContent=currentQuery?'Результаты поиска':'Популярные тексты';
+    }
+
+    const grid=$('trackGrid');
+    if(!list.length){
+      grid.innerHTML=`<div class="empty"><b>${tracks.length?'Ничего не найдено':'Каталог пока пуст'}</b>${tracks.length?'Попробуй изменить запрос.':'Владелец еще не добавил треки.'}</div>`;
+      return;
+    }
+    grid.innerHTML=list.map(t=>{
+      const type=types[releaseKey(t)];
+      const cover=coverSource(t);
+      const links=externalLinks(t);
+      const bgStyle = cover ? '' : `background: ${generateUniqueCover(t.title, t.artist)}`;
+      
+      return `
+        <article class="track">
+          <button class="cover" style="${bgStyle}" data-open="${escapeHTML(t.id)}">
+            ${cover?`<img src="${escapeHTML(cover)}" alt="" loading="lazy">`:`<div class="cover-art-gen">${escapeHTML(t.title)}<span>${escapeHTML(t.artist||'Temagas')}</span></div>`}
+            <span class="type">${type}</span>
+          </button>
+          <div class="track-body">
+            <h3>${escapeHTML(t.title)}</h3>
+            <div class="artist">${escapeHTML(t.artist||'')}</div>
+            <div class="track-foot">
+              <small>${escapeHTML(t.release_name||type)}</small>
+              <div class="links">${links.map(([label,url])=>`<a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(label)}</a>`).join('')}</div>
+            </div>
+            ${isOwner?`<div class="track-admin-actions" style="display:flex;gap:6px;margin-top:12px"><button class="secondary" style="padding:6px 10px;font-size:11px" data-edit="${escapeHTML(t.id)}">Изменить</button><button class="secondary" style="padding:6px 10px;font-size:11px;color:#ff6868" data-delete="${escapeHTML(t.id)}">Удалить</button></div>`:''}
+          </div>
+        </article>`;
+    }).join('');
+  }
+
+  async function loadTracks(){
+    if(!db){tracks=[];render();return;}
+    try{
+      const snapshot=await db.collection('tracks').orderBy('created_at','desc').get();
+      tracks=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));
+      render();renderAdminList();
+      hideNotice('connectionNotice');
+    }catch(e){
+      showNotice('connectionNotice','Ошибка загрузки каталога: '+e.message,'error');
+    }
+  }
+
+  async function loadTextAlbums(){
+    if(!db){textAlbums=[];renderTextAlbums();return;}
+    try{
+      const snapshot=await db.collection('text_albums').orderBy('created_at','desc').get();
+      textAlbums=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));
+      renderTextAlbums();renderAdminList();
+    }catch(e){
+      $('textAlbumGrid').innerHTML='<div class="empty"><b>Не удалось загрузить альбомы</b></div>';
+    }
+  }
+
+  function renderTextAlbums(){
+    const grid=$('textAlbumGrid');
+    if(!grid)return;
+    const q=currentQuery.toLowerCase();
+    const list=textAlbums.filter(a=>[a.title,a.artist,a.description,(a.songs||[]).map(x=>x.title+' '+x.lyrics).join(' ')].join(' ').toLowerCase().includes(q));
+    if(!list.length){
+      grid.innerHTML='<div class="empty"><b>'+(textAlbums.length?'Ничего не найдено':'Нет текстовых альбомов')+'</b></div>';
+      return;
+    }
+    grid.innerHTML=list.map(a=>{
+      const cover=a.cover_data||safeURL(a.cover_url);
+      const bgStyle = cover ? '' : `background: ${generateUniqueCover(a.title, a.artist)}`;
+      
+      return `
+        <article class="track">
+          <button class="cover" style="${bgStyle}" data-open-album="${escapeHTML(a.id)}">
+            ${cover?`<img src="${escapeHTML(cover)}" alt="" loading="lazy">`:`<div class="cover-art-gen">${escapeHTML(a.title)}<span>${escapeHTML(a.artist||'Temagas')}</span></div>`}
+            <span class="type">Альбом</span>
+          </button>
+          <div class="track-body">
+            <h3>${escapeHTML(a.title)}</h3>
+            <div class="artist">${escapeHTML(a.artist||'Temagas')}</div>
+            <div class="track-foot">
+              <small>${(a.songs||[]).length} песен</small>
+              <div class="links"><a href="#" data-open-album="${escapeHTML(a.id)}">Читать</a></div>
+            </div>
+            ${isOwner?`<div class="track-admin-actions" style="display:flex;gap:6px;margin-top:12px"><button class="secondary" style="padding:6px 10px;font-size:11px" data-edit-album="${escapeHTML(a.id)}">Изменить</button><button class="secondary" style="padding:6px 10px;font-size:11px;color:#ff6868" data-delete-album="${escapeHTML(a.id)}">Удалить</button></div>`:''}
+          </div>
+        </article>`;
+    }).join('');
+  }
+
+  function parseAlbumSongs(raw){return raw.split(/\n\s*---\s*\n/g).map(block=>{const lines=block.trim().split('\n');const title=(lines.shift()||'').trim();return {title,lyrics:lines.join('\n').trim()};}).filter(x=>x.title&&x.lyrics);}
+  function albumSongsToText(songs){return (songs||[]).map(x=>x.title+'\n'+x.lyrics).join('\n\n---\n\n');}
+
+  function openTextAlbum(id){
+    const a=textAlbums.find(x=>x.id===id);
+    if(!a)return;
+    const cover=a.cover_data||safeURL(a.cover_url);
+    const bgStyle = cover ? '' : `height:210px; border-radius:14px; margin:16px 0; background: ${generateUniqueCover(a.title, a.artist)}`;
+    const shareUrl = window.location.href.split('#')[0] + '#album_' + a.id;
+    
+    $('songContent').innerHTML=`
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="eyebrow">ТЕКСТОВЫЙ АЛЬБОМ</div>
+        <button class="secondary" id="shareAlbumBtn" style="font-size:11px;padding:6px 12px">🔗 Поделиться</button>
+      </div>
+      ${cover?`<div class="cover" style="border-radius:14px;margin:16px 0"><img src="${escapeHTML(cover)}" alt=""></div>`:`<div style="${bgStyle}" class="cover"><div class="cover-art-gen">${escapeHTML(a.title)}<span>${escapeHTML(a.artist||'')}</span></div></div>`}
+      <h2 style="margin:0 0 4px;font-size:24px">${escapeHTML(a.title)}</h2>
+      <div class="artist">${escapeHTML(a.artist||'')}</div>
+      ${a.description?`<p style="color:var(--muted);line-height:1.6;margin-top:12px;font-size:14px">${escapeHTML(a.description)}</p>`:''}
+      ${(a.songs||[]).map((song,i)=>`<h3 style="margin:28px 0 8px;font-size:17px">${i+1}. ${escapeHTML(song.title)}</h3><div class="lyrics">${escapeHTML(song.lyrics)}</div>`).join('')}
+    `;
+    $('songModal').classList.add('show');
+    $('shareAlbumBtn').onclick = () => { navigator.clipboard.writeText(shareUrl); showToast('Ссылка скопирована'); };
+  }
+
+  const globalAudio = $('globalAudio');
+  const stickyPlayer = $('stickyPlayer');
+  const spPlayBtn = $('spPlayBtn');
+  const spSlider = $('spSlider');
+  const spCurrentTime = $('spCurrentTime');
+  const spDuration = $('spDuration');
+  let isDraggingSlider = false;
+
+  function playTrackInSticky(t) {
+    if (!t.audio_url) return;
+    const cover = coverSource(t);
+    $('spTitle').textContent = t.title;
+    $('spArtist').textContent = t.artist || 'Temagas';
+    
+    const coverContainer = $('spCoverContainer');
+    if (cover) {
+      coverContainer.innerHTML = `<img src="${escapeHTML(cover)}" alt="" style="width:100%;height:100%;border-radius:10px;object-fit:cover">`;
+    } else {
+      coverContainer.innerHTML = `T.`;
+    }
+
+    if (globalAudio.src !== t.audio_url) {
+      globalAudio.src = t.audio_url;
+    }
+    globalAudio.play();
+    stickyPlayer.classList.add('show');
+    spPlayBtn.textContent = '❚❚';
+  }
+
+  spPlayBtn.addEventListener('click', () => {
+    if (globalAudio.paused) { globalAudio.play(); spPlayBtn.textContent = '❚❚'; }
+    else { globalAudio.pause(); spPlayBtn.textContent = '▶'; }
+  });
+
+  $('spClose').addEventListener('click', () => {
+    globalAudio.pause();
+    globalAudio.currentTime = 0;
+    stickyPlayer.classList.remove('show');
+  });
+
+  globalAudio.addEventListener('timeupdate', () => {
+    if (!isDraggingSlider && globalAudio.duration) {
+      spSlider.value = (globalAudio.currentTime / globalAudio.duration) * 100;
+      spCurrentTime.textContent = formatTime(globalAudio.currentTime);
+      spDuration.textContent = formatTime(globalAudio.duration);
+    }
+  });
+
+  globalAudio.addEventListener('ended', () => { spPlayBtn.textContent = '▶'; });
+
+  spSlider.addEventListener('input', () => {
+    isDraggingSlider = true;
+    if (globalAudio.duration) spCurrentTime.textContent = formatTime((spSlider.value / 100) * globalAudio.duration);
+  });
+
+  spSlider.addEventListener('change', () => {
+    isDraggingSlider = false;
+    if (globalAudio.duration) globalAudio.currentTime = (spSlider.value / 100) * globalAudio.duration;
+  });
+
+  function formatTime(secs) {
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  }
+
+  function openSong(id){
+    const t=tracks.find(x=>x.id===id);if(!t)return;
+    const type=groupedTracks()[releaseKey(t)];
+    const cover=coverSource(t);
+    const links=externalLinks(t);
+    const shareUrl = window.location.href.split('#')[0] + '#song_' + t.id;
+    const bgStyle = cover ? '' : `height:210px; border-radius:14px; margin:16px 0; background: ${generateUniqueCover(t.title, t.artist)}`;
+
+    $('songContent').innerHTML=`
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="eyebrow">${type}</div>
+        <div style="display:flex;gap:8px">
+          <button class="secondary" id="shareSongBtn" style="font-size:11px;padding:6px 12px">🔗 Поделиться</button>
+          <button class="secondary" id="copyLyricsBtn" style="font-size:11px;padding:6px 12px">📋 Текст</button>
+        </div>
+      </div>
+      ${cover?`<div class="cover" style="border-radius:14px;margin:16px 0"><img src="${escapeHTML(cover)}" alt=""></div>`:`<div style="${bgStyle}" class="cover"><div class="cover-art-gen">${escapeHTML(t.title)}<span>${escapeHTML(t.artist||'')}</span></div></div>`}
+      <h2 style="margin:0 0 4px;font-size:24px">${escapeHTML(t.title)}</h2>
+      <div class="artist">${escapeHTML(t.artist||'')}</div>
+      ${t.audio_url?`<button class="primary" id="modalPlayBtn" style="width:100%;margin:16px 0;height:42px">▶ Включить трек</button>`:''}
+      <div class="links" style="margin-top:16px">${links.map(([label,url])=>`<a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(label)}</a>`).join('')}</div>
+      <div class="lyrics">${escapeHTML(t.lyrics||'Текст пока не добавлен')}</div>
+    `;
+    $('songModal').classList.add('show');
+
+    if ($('modalPlayBtn')) $('modalPlayBtn').onclick = () => playTrackInSticky(t);
+    $('shareSongBtn').onclick = () => { navigator.clipboard.writeText(shareUrl); showToast('Ссылка скопирована'); };
+    $('copyLyricsBtn').onclick = () => { navigator.clipboard.writeText(t.lyrics || ''); showToast('Текст скопирован'); };
+  }
+
+  function refreshOwner(user){
+    const email=user?.email?.toLowerCase()||'';
+    isOwner=!!user && email===OWNER_EMAIL.toLowerCase() && user.emailVerified===true;
+    $('adminPanel').classList.toggle('show',isOwner);
+    $('addTabButton').style.display=isOwner?'inline-block':'none';
+    $('ownerOpen').textContent=isOwner?'Панель владельца':'Вход владельца';
+    render();renderAdminList();
+  }
+
+  function openLogin(){if(isOwner){openAddTab();return;}$('loginModal').classList.add('show');}
+  function closeModal(id){$(id).classList.remove('show');}
+  
+  $('ownerOpen').addEventListener('click',openLogin);
+  $('closeLogin').addEventListener('click',()=>closeModal('loginModal'));
+  $('closeSong').addEventListener('click',()=>closeModal('songModal'));
+  $('loginModal').addEventListener('click',e=>{if(e.target===$('loginModal'))closeModal('loginModal');});
+  $('songModal').addEventListener('click',e=>{if(e.target===$('songModal'))closeModal('songModal');});
+
+  $('sendMagic').addEventListener('click',async()=>{
+    if(!auth){showNotice('loginNotice','Firebase не настроен','error');return;}
+    const btn=$('sendMagic');btn.disabled=true;btn.textContent='Авторизация…';
+    try{
+      const provider=new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({prompt:'select_account',login_hint:OWNER_EMAIL});
+      const result=await auth.signInWithPopup(provider);
+      if(result.user?.email?.toLowerCase()!==OWNER_EMAIL.toLowerCase()||!result.user.emailVerified){
+        await auth.signOut();
+        throw new Error('Доступ запрещен');
+      }
+      closeModal('loginModal');
+      refreshOwner(result.user);
+    }catch(e){showNotice('loginNotice',e.message,'error');}
+    finally{btn.disabled=false;btn.textContent='Войти через Google';}
+  });
+
+  $('logoutBtn').addEventListener('click',async()=>{if(auth)await auth.signOut();isOwner=false;$('adminPanel').classList.remove('show');render();});
+
+  async function compressCover(file){
+    if(!file)return '';
+    let bitmap;
+    try{bitmap=await createImageBitmap(file);}catch{throw new Error('Ошибка чтения изображения');}
+    const maxDim=1000, scale=Math.min(1,maxDim/Math.max(bitmap.width,bitmap.height));
+    const canvas=document.createElement('canvas');canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);
+    const ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close?.();
+    let quality=.78, blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',quality));
+    return await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result));r.onerror=()=>reject();r.readAsDataURL(blob);});
+  }
+
+  $('trackForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(!db||!isOwner){showNotice('formNotice','Только для владельца','error');return;}
+    const btn=$('saveBtn');btn.disabled=true;btn.textContent='Сохранение…';
+    try{
+      let coverUrl=safeURL($('coverUrl').value.trim())||'';let coverData=editingCoverData;
+      const file=$('coverFile').files[0];if(file){coverData=await compressCover(file);coverUrl='';}else if(coverUrl){coverData='';}
+      const audioFile=$('audioFile').files[0];let audioUrl=editingAudioUrl;
+      if(audioFile){
+        if(!storage)throw new Error('Storage не подключен');
+        $('audioStatus').textContent='Загрузка аудио…';
+        const ref=storage.ref('tracks/'+Date.now()+'_'+audioFile.name.replace(/[^a-zA-Z0-9._-]/g,'_'));
+        await ref.put(audioFile);
+        audioUrl=await ref.getDownloadURL();
+        $('audioStatus').textContent='Аудио загружено ✓';
+      }
+      const payload={title:$('title').value.trim(),artist:$('artist').value.trim(),release_name:$('releaseName').value.trim()||$('title').value.trim(),audio_url:audioUrl,cover_url:coverUrl,cover_data:coverData,youtube_url:safeURL($('youtubeUrl').value.trim())||'',spotify_url:safeURL($('spotifyUrl').value.trim())||'',other_url:safeURL($('otherUrl').value.trim())||'',other_label:$('otherLabel').value.trim()||'',lyrics:$('lyrics').value.trim()};
+      const id=$('editId').value;
+      if(id){
+        payload.created_at=tracks.find(t=>t.id===id)?.created_at||firebase.firestore.FieldValue.serverTimestamp();
+        payload.updated_at=firebase.firestore.FieldValue.serverTimestamp();
+        await db.collection('tracks').doc(id).update(payload);
+      }else{
+        payload.created_at=firebase.firestore.FieldValue.serverTimestamp();
+        await db.collection('tracks').add(payload);
+      }
+      showNotice('formNotice','Успешно опубликовано!','ok');
+      $('trackForm').reset();$('artist').value='Temagas';$('editId').value='';editingCoverData='';editingAudioUrl='';$('audioFile').value='';$('audioStatus').textContent='';$('saveBtn').textContent='Опубликовать трек';$('cancelEdit').hidden=true;
+      await loadTracks();
+    }catch(err){showNotice('formNotice','Ошибка: '+err.message,'error');}
+    finally{btn.disabled=false;if(btn.textContent==='Сохранение…')btn.textContent='Опубликовать трек';}
+  });
+
+  function startEdit(id){
+    const t=tracks.find(x=>x.id===id);if(!t)return;
+    $('editId').value=t.id;$('title').value=t.title||'';$('artist').value=t.artist||'';$('releaseName').value=t.release_name||'';$('coverUrl').value=t.cover_url||'';$('youtubeUrl').value=t.youtube_url||'';$('spotifyUrl').value=t.spotify_url||'';$('otherUrl').value=t.other_url||'';$('otherLabel').value=t.other_label||'';$('lyrics').value=t.lyrics||'';
+    editingCoverData=t.cover_data||'';editingAudioUrl=t.audio_url||'';
+    $('audioStatus').textContent=editingAudioUrl?'Аудио прикреплено':'';
+    $('saveBtn').textContent='Сохранить изменения';$('cancelEdit').hidden=false;
+    $('adminPanel').scrollIntoView({behavior:'smooth'});
+  }
+
+  $('cancelEdit').addEventListener('click',()=>{$('trackForm').reset();$('artist').value='Temagas';$('editId').value='';editingCoverData='';editingAudioUrl='';$('audioFile').value='';$('audioStatus').textContent='';$('saveBtn').textContent='Опубликовать трек';$('cancelEdit').hidden=true;hideNotice('formNotice');});
+
+  async function deleteTrack(id){
+    const t=tracks.find(x=>x.id===id);if(!t||!confirm(`Удалить «${t.title}»?`))return;
+    try{await db.collection('tracks').doc(id).delete();await loadTracks();}catch(e){alert('Ошибка: '+e.message);}
+  }
+
+  function openAddTab(){if(!isOwner){$('loginModal').classList.add('show');return;}$('adminPanel').classList.add('show');$('adminPanel').scrollIntoView({behavior:'smooth'});switchAdminTab('song');}
+  function switchAdminTab(tab){
+    document.querySelectorAll('[data-admin-tab]').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));
+    $('adminSongPage').classList.toggle('active',tab==='song');
+    $('adminTextAlbumPage').classList.toggle('active',tab==='textAlbum');
+    $('adminManagePage').classList.toggle('active',tab==='manage');
+    if(tab==='manage')renderAdminList();
+  }
+
+  function renderAdminList(){
+    const box=$('adminManageList');if(!box)return;
+    if(!isOwner){box.textContent='Требуется вход';return;}
+    const songRows=tracks.map(t=>`<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-bottom:1px solid var(--line)"><div><b>${escapeHTML(t.title)}</b><div class="artist">Песня</div></div><div style="display:flex;gap:6px"><button class="secondary" style="padding:6px 12px;font-size:12px" data-manage-edit="${escapeHTML(t.id)}">Изменить</button></div></div>`).join('');
+    const albumRows=textAlbums.map(a=>`<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-bottom:1px solid var(--line)"><div><b>${escapeHTML(a.title)}</b><div class="artist">Альбом</div></div><div style="display:flex;gap:6px"><button class="secondary" style="padding:6px 12px;font-size:12px" data-manage-edit-album="${escapeHTML(a.id)}">Изменить</button></div></div>`).join('');
+    box.innerHTML=(songRows+albumRows)||'Нет публикаций';
+  }
+
+  function startAlbumEdit(id){
+    const a=textAlbums.find(x=>x.id===id);if(!a)return;
+    $('editAlbumId').value=a.id;$('albumTitle').value=a.title||'';$('albumArtist').value=a.artist||'';$('albumDescription').value=a.description||'';$('albumCoverUrl').value=a.cover_url||'';$('albumSongs').value=albumSongsToText(a.songs);
+    editingAlbumCoverData=a.cover_data||'';
+    $('saveAlbumBtn').textContent='Сохранить изменения';$('cancelAlbumEdit').hidden=false;
+    switchAdminTab('textAlbum');$('adminPanel').scrollIntoView({behavior:'smooth'});
+  }
+
+  async function deleteTextAlbum(id){
+    const a=textAlbums.find(x=>x.id===id);if(!a||!confirm(`Удалить «${a.title}»?`))return;
+    try{await db.collection('text_albums').doc(id).delete();await loadTextAlbums();}catch(e){alert('Ошибка: '+e.message);}
+  }
+
+  $('textAlbumForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(!db||!isOwner){showNotice('albumFormNotice','Только для владельца','error');return;}
+    const btn=$('saveAlbumBtn');btn.disabled=true;btn.textContent='Сохранение…';
+    try{
+      const songs=parseAlbumSongs($('albumSongs').value);
+      if(!songs.length)throw new Error('Добавьте песни');
+      let coverUrl=safeURL($('albumCoverUrl').value.trim())||'';let coverData=editingAlbumCoverData;
+      const file=$('albumCoverFile').files[0];if(file){coverData=await compressCover(file);coverUrl='';}else if(coverUrl){coverData='';}
+      const payload={title:$('albumTitle').value.trim(),artist:$('albumArtist').value.trim(),description:$('albumDescription').value.trim(),cover_url:coverUrl,cover_data:coverData,songs};
+      const id=$('editAlbumId').value;
+      if(id){
+        payload.updated_at=firebase.firestore.FieldValue.serverTimestamp();
+        await db.collection('text_albums').doc(id).update(payload);
+      }else{
+        payload.created_at=firebase.firestore.FieldValue.serverTimestamp();
+        await db.collection('text_albums').add(payload);
+      }
+      showNotice('albumFormNotice','Альбом опубликован!','ok');
+      $('textAlbumForm').reset();$('albumArtist').value='Temagas';$('editAlbumId').value='';editingAlbumCoverData='';$('saveAlbumBtn').textContent='Опубликовать альбом';$('cancelAlbumEdit').hidden=true;
+      await loadTextAlbums();
+    }catch(err){showNotice('albumFormNotice','Ошибка: '+err.message,'error');}
+    finally{btn.disabled=false;if(btn.textContent==='Сохранение…')btn.textContent='Опубликовать альбом';}
+  });
+
+  $('cancelAlbumEdit').addEventListener('click',()=>{$('textAlbumForm').reset();$('albumArtist').value='Temagas';$('editAlbumId').value='';editingAlbumCoverData='';$('saveAlbumBtn').textContent='Опубликовать альбом';$('cancelAlbumEdit').hidden=true;hideNotice('albumFormNotice');});
+
+  $('addTabButton').addEventListener('click',openAddTab);
+  document.querySelectorAll('[data-admin-tab]').forEach(b=>b.addEventListener('click',()=>switchAdminTab(b.dataset.adminTab)));
+  
+  $('adminManageList').addEventListener('click',e=>{
+    const b=e.target.closest('[data-manage-edit]');
+    const ab=e.target.closest('[data-manage-edit-album]');
+    if(b){switchAdminTab('song');startEdit(b.dataset.manageEdit);}
+    else if(ab)startAlbumEdit(ab.dataset.manageEditAlbum);
+  });
+
+  $('textAlbumGrid').addEventListener('click',e=>{
+    const open=e.target.closest('[data-open-album]');
+    const edit=e.target.closest('[data-edit-album]');
+    const del=e.target.closest('[data-delete-album]');
+    if(open){e.preventDefault();openTextAlbum(open.dataset.openAlbum);}
+    else if(edit)startAlbumEdit(edit.dataset.editAlbum);
+    else if(del)deleteTextAlbum(del.dataset.deleteAlbum);
+  });
+
+  $('trackGrid').addEventListener('click',e=>{
+    const edit=e.target.closest('[data-edit]');
+    const del=e.target.closest('[data-delete]');
+    const open=e.target.closest('[data-open]');
+    if(edit)startEdit(edit.dataset.edit);
+    else if(del)deleteTrack(del.dataset.delete);
+    else if(open)openSong(open.dataset.open);
+  });
+
+  $('searchInput').addEventListener('input',e=>{currentQuery=e.target.value.trim();render();});
+  $('searchBtn').addEventListener('click',()=>{currentQuery=$('searchInput').value.trim();render();});
+
+  document.querySelectorAll('[data-kind]').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-kind]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    currentKind=b.dataset.kind;
+    render();
+  }));
+
+  document.querySelectorAll('nav [data-filter]').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('nav [data-filter]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    currentNav=b.dataset.filter;
+    if(currentNav==='tracks') currentNav='all';
+    if(currentNav==='artists') currentKind='all';
+    render();
+    const targetId = (b.dataset.filter === 'textAlbums') ? 'textAlbumsSection' : 'collection';
+    $(targetId).scrollIntoView({behavior:'smooth'});
+  }));
+
+  $('year').textContent=new Date().getFullYear();
+
+  if(auth){
+    auth.onAuthStateChanged(async user=>{refreshOwner(user);await Promise.all([loadTracks(),loadTextAlbums()]);});
+  }else{
+    refreshOwner(null);loadTracks();loadTextAlbums();
+  }
+</script>
+</body>
+</html>
